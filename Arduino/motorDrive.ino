@@ -35,6 +35,11 @@ void Drive(int cap, int speed)
       LeftSpeed = (255*speed/100)*Repart;
       RightSpeed = (255*speed/100)*(1-Repart);
     }
+    else if(cap == 0)
+    {
+      LeftSpeed = (255*speed/100);
+      RightSpeed = (255*speed/100);
+    }
     else
     {
       LeftSpeed = (255*speed/100)*(1-Repart);
