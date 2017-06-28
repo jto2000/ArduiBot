@@ -1,0 +1,89 @@
+/* On enregistre un certain nombre de valeurs;
+Si n> minima valeurs => On lance la fonction autocorrelation
+On cherche le max de r (sera maximum à 0) en partant de la valeur mini => sera théoriquement répétée
+On peux vérifier si le temps / 2 est toujours une valeur max ?
+*/
+
+// A définir : MaxTime, MaxDelay, delayStep
+
+//=> On peux faire un tableau à 3 entrées, avec temps + Left + Right
+//int USValues[3][MaxTime] = {0};
+
+// Afin de travailler sur 2 canaux, on pourrait faire une série avec les signaux décalés d'une certaine fraction de période ?
+
+int LeadAutoCorr(int MaxTime, int MaxDelay)
+{
+	// Ici 3 tableaux pour simplifier :
+	int USTime[MaxTime];
+	int USLeft[MaxTime];
+	int USRight[MaxTime];
+
+	float acf[MaxDelay]; // AutoCorrelation Factor
+
+	float maxAcf = 0.0;
+	
+	int delayStep = 0; // Computed with trig freq
+
+	int nValuesSaved = 0;
+	int maxToCheck = 0;
+	int period =0;
+	int avgDelay =0;
+
+	// Initialisation des tableaux :
+	for (i=1;i<MaxTime;i++)
+	{
+		USTime[i] =0;
+		USLeft[i] =0;
+		USRight[i] =0;
+	}
+
+	for (i=1;i<MaxDelay;i++)
+	{
+		acf[i] =0.0;
+	}
+
+	if (nValuesSaved > minValuesForCorrel)
+	{
+		//delayStep = median(USValues[])
+		// Amélioration possible en utilisant les données temporelles...
+		
+		for (i=1;i<nValuesSaved;i++)
+		{
+			avgDelay += USTime[i];
+		}
+		delayStep = (int) avgDelay / nValuesSaved / 2; // TH de Nyquist ?
+		
+		autocorrelation(USTime, acf, nvaluesSaved, maxDelay, delayStep);
+		if (acf(0) > 0.90)
+		{
+			// Calcul OK
+		}
+		else
+		{
+			// Probleme
+		}
+		maxToCheck = (MaxDelay < nvalues) ? MaxDelay : nvalues;
+		for (i=1;i<maxToCheck;i++)
+		{	
+			if (acf[i] > maxAcf)
+			{
+				maxAcf = acf[i];
+				period = i*delayStep*2;
+			}
+			
+		}
+		if (maxAcf > 0.96)
+		{
+			// Max Acf OK
+			PeriodFound = true;
+			// Periode trouvée, on va jusqu a la fin de la periode et on s'arrete !
+		}
+		else
+		{
+			// On continue de tourner
+			PeriodFound = false;
+		}
+	}
+
+	return PeriodFound;
+}
